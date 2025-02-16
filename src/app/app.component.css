@@ -1,0 +1,61 @@
+.text-center {
+  text-align: center;
+}
+
+.form-group.my-3 {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+}
+
+.form-control {
+  width: 60%;
+  margin: 0 auto;
+}
+
+.card-option {
+  width: 150px;
+  cursor: pointer;
+  transition: transform 0.3s, opacity 0.3s;
+}
+
+.card-option.selected {
+  transform: scale(1.1);
+  border: 2px solid #007bff;
+}
+
+.card-option.dimmed {
+  opacity: 0.5;
+}
+
+.cards-container {
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  padding: 1rem 0;
+}
+
+/* Estilos para centrar el contenedor del desplegable */
+.select-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Estilos para el canvas */
+chartCanvas {
+  position: relative;
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+#drillDownBackButton {
+  z-index: 1000;
+  transition: all 0.3s ease;
+}
+
+#drillDownBackButton:hover {
+  transform: translateX(-5px);
+}
+

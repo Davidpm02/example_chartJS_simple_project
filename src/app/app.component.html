@@ -1,0 +1,119 @@
+<!-- 
+  Este es el template de mi componente principal.
+  Incluye un desplegable para seleccionar la tabla y cuatro cards para elegir el tipo de gráfico.
+-->
+<div class="container my-4">
+  <h1 class="text-center">Graficos con GraphJS</h1>
+ 
+  <p><strong>***</strong></p>
+  <p style="text-align: center;">Las tablas que aparecen en el desplegable se obtienen directamente
+    de una base de datos SQLite.
+  </p>
+  <p><strong>***</strong></p>
+  <!-- Desplegable para seleccionar la tabla -->
+  <div class="form-group my-3 select-container">
+    <label for="tableSelect">Selecciona una tabla:</label>
+    <select 
+      id="tableSelect" 
+      class="form-control" 
+      [(ngModel)]="selectedTable" 
+      (ngModelChange)="onTableSelected()">
+      <option *ngFor="let table of tables" [value]="table.name">{{ table.name }}</option>
+    </select>
+  </div>
+
+  <!-- Componente para seleccionar el rango de fechas (aparece si se ha seleccionado una tabla) -->
+  <app-date-range-selector 
+    (dateRangeSelected)="onDateRangeSelected($event)" 
+    *ngIf="selectedTable">
+  </app-date-range-selector>
+
+  <!-- Componente para seleccionar las categorías (aparece si se han cargado categorías disponibles) -->
+  <app-category-selector 
+    [categories]="availableCategories"
+    (selectedCategoriesChange)="onCategoriesSelected($event)"
+    *ngIf="selectedTable && availableCategories.length">
+  </app-category-selector>
+
+  <!-- Cards para seleccionar el tipo de gráfico -->
+  <div class="cards-container">
+    <!-- (Los cards permanecen sin cambios) -->
+    <div class="card m-2 card-option" 
+        [ngClass]="{'selected': selectedChart === 'lineas', 'dimmed': selectedChart && selectedChart !== 'lineas'}" 
+        (click)="selectChart('lineas')">
+      <div class="card-body text-center">
+        <h5 class="card-title">Gráfico de líneas</h5>
+      </div>
+    </div>
+
+    <div class="card m-2 card-option" 
+        [ngClass]="{'selected': selectedChart === 'barras', 'dimmed': selectedChart && selectedChart !== 'barras'}" 
+        (click)="selectChart('barras')">
+      <div class="card-body text-center">
+        <h5 class="card-title">Gráfico de barras</h5>
+      </div>
+    </div>
+
+    <div class="card m-2 card-option" 
+        [ngClass]="{'selected': selectedChart === 'barrasAgrupadas', 'dimmed': selectedChart && selectedChart !== 'barrasAgrupadas'}" 
+        (click)="selectChart('barrasAgrupadas')">
+      <div class="card-body text-center">
+        <h5 class="card-title">Gráfico de barras agrupadas</h5>
+      </div>
+    </div>
+
+    <div class="card m-2 card-option" 
+        [ngClass]="{'selected': selectedChart === 'pastel', 'dimmed': selectedChart && selectedChart !== 'pastel'}" 
+        (click)="selectChart('pastel')">
+      <div class="card-body text-center">
+        <h5 class="card-title">Gráfico pastel</h5>
+      </div>
+    </div>
+  </div>
+
+  <!-- Botón para generar el gráfico -->
+  <div class="text-center my-3">
+    <button class="btn btn-primary" 
+            [disabled]="!selectedChart || !selectedTable" 
+            (click)="generateChart()">
+      Generar gráfico
+    </button>
+  </div>
+
+  <!-- Botón para volver al gráfico original, visible sólo en drill down -->
+  <div class="drilldown-controls" *ngIf="drillDownActive" style="text-align: right; margin-bottom: 10px;">
+    <button class="btn btn-secondary" (click)="onBack()">Volver</button>
+  </div>
+
+  <!-- Canvas para renderizar el gráfico con ChartJS -->
+  <div class="my-4">
+    <canvas id="chartCanvas" class="chartCanvas"></canvas>
+  </div>
+
+<!-- 
+  A continuación incluyo estilos inline para las cards. 
+  En mi proyecto real, estos estilos los trasladaría a un archivo SCSS o CSS.
+-->
+<style>
+  /* Estilo base para las cards */
+  .card-option {
+    background-color: aquamarine;
+    border-radius: 10px;
+    width: 150px;
+    cursor: pointer;
+    transition: transform 0.3s, opacity 0.3s;
+  }
+
+  /* Card seleccionada */
+  .card-option.selected {
+    transform: scale(1.1);
+    border: 2px solid #007bff;
+    background-color: aqua;
+  }
+
+  /* Cards no seleccionadas  */
+  .card-option.dimmed {
+    opacity: 0.5;
+    background-color: aquamarine
+  }
+</style>
